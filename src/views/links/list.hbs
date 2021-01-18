@@ -1,0 +1,27 @@
+<div class="container p-4">
+    <div class="row">
+    {{#each links}}
+    <div class="col-md-3" >
+    <div class="card">
+  <h5 class="card-header">{{title}}</h5>
+    <div class="card-body">
+        <p class="m-2">{{description}}</p>
+       <a href="{{url}}" target="_blank" class="btn btn-primary">Go somewhere</a>
+    <p class="m-2">{{timeago created_at}}</p>
+        <a href="/links/delete/{{id}}" class="btn btn-danger">Delete Link</a>
+         <a href="" class="btn btn-secondary">Edit</a>
+
+    </div>
+</div>
+</div>
+{{else}}
+<div class="col-md-4 mx-auto" >
+     <div class=" card card-body text-center">
+         <p>No hay sitios agregados!! </p>
+         <a href="/links/add"  class="btn btn-primary">Go add</a>
+     </div>
+</div>
+{{/each}}
+
+</div>
+</div>

@@ -2,7 +2,10 @@ const express = require('express');
 const morgan = require('morgan');
 const exhb = require('express-handlebars');
 const path = require('path');
-
+const flash = require('connect-flash');
+const session = require('express-session');
+const mysqlStore = require('express-mysql-session');
+const {database} =  require('./keys');
 //initializations
 const app = express();
 
@@ -22,13 +25,25 @@ app.engine('.hbs',exhb({
 app.set('view engine', '.hbs');
 
 //Middelwares
+//configurar flash message necesita guardar la sesion en el servidor o en la BD
+//guardando en Mysql
+app.use(session({
+    secret: 'dashfuentes',
+    resave:false,
+    saveUninitialized: false,
+    store: new mysqlStore(database)
+}));
+app.use(flash());
 app.use(morgan('dev'));
 //accept format request
 app.use(express.urlencoded({extended:false}));
 app.use(express.json());
 
+
 //Global ENV
 app.use((req,res,next) =>{
+    //puedo utilizar el flash message en todas las vistas
+  app.locals.success = req.flash('success');
     next();
 });
 

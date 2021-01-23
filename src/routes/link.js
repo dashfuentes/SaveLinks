@@ -8,7 +8,7 @@ router.get('/add',(req,res) =>{
 
 router.post('/add', async (req,res) =>{
     //  console.log(req.body);
-    //destructurin
+    //destructuring
     const {title,url,description} = req.body;
     const newUrl = {
         title,
@@ -17,6 +17,7 @@ router.post('/add', async (req,res) =>{
         user_id : 1
     };
     await pool.query('INSERT INTO links SET ?', [newUrl]);
+    req.flash('success','Link saved successfully');
     res.redirect('/links');
 });
 //list
@@ -31,7 +32,28 @@ router.get('/delete/:id',async(req,res) =>{
 // console.log(req.params.id);
 const {id} = req.params;
 await pool.query('DELETE FROM links where id = ?', [id]);
+req.flash('success','Link delete successfully');
 res.redirect('/links');
 });
+
+//edit
+router.get('/edit/:id',async(req,res) =>{  
+    const {id} = req.params;
+   const singleLink= await pool.query('SELECT * from links where id = ?',[id]);
+    res.render('links/edit',{singleLink: singleLink[0]});
+});
+
+router.post('/edit/:id',async(req,res) =>{
+    const {id} = req.params;
+    const {title,url,description} =  req.body;
+    const singleLink = {
+        title,
+        url,
+        description
+    };
+    await pool.query('UPDATE links set ? where id = ?',[singleLink,id]);
+    req.flash('success','Link update successfully');
+    res.redirect('/links');
+})
 
 module.exports =  router;

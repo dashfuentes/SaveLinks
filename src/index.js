@@ -8,6 +8,7 @@ const mysqlStore = require('express-mysql-session');
 const {database} =  require('./keys');
 const passport =  require('passport');
 
+
 //initializations
 const app = express();
 //passport config
@@ -29,8 +30,8 @@ app.engine('.hbs',exhb({
 app.set('view engine', '.hbs');
 
 //Middelwares
-//configurar flash message necesita guardar la sesion en el servidor o en la BD
-//guardando en Mysql
+
+//guardando en Mysql sesion
 app.use(session({
     secret: 'dashfuentes',
     resave:false,
@@ -50,6 +51,9 @@ app.use(passport.session());
 app.use((req,res,next) =>{
     //puedo utilizar el flash message en todas las vistas
   app.locals.success = req.flash('success');
+  app.locals.message = req.flash('message');
+  //obtener el usuario en sesion auth:user 
+  app.locals.user = req.user;
     next();
 });
 
